@@ -1,0 +1,16 @@
+# Go build
+/bin/
+/dist/
+/build/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Coverage
+coverage.*
+*.coverprofile
+coverage.out
