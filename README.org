@@ -2,3 +2,6 @@
 
 How many days have passed since... Many times this question has been asked now
 it can finally be answered!
+
+* Linting
+Run =make lint= to execute =golangci-lint= (core linters: errcheck, govet, ineffassign, staticcheck, unused). Install instructions: https://golangci-lint.run/usage/install/

@@ -2,7 +2,7 @@ APP=daycount
 PKG=./internal/...
 COVER_PROFILE=coverage.out
 
-.PHONY: test cover run serve docker-build docker-run
+.PHONY: test cover run serve docker-build docker-run lint
 
 test:
 	# Exclude cmd (CLI) package from coverage per project policy
@@ -22,3 +22,10 @@ docker-build:
 
 docker-run: docker-build
 	docker run --rm -p 8080:8080 daycount:latest
+
+lint:
+	@if ! command -v golangci-lint >/dev/null 2>&1; then \
+		 echo "golangci-lint not found. Install: https://golangci-lint.run/usage/install/"; \
+		 exit 2; \
+	 fi
+	golangci-lint run ./...

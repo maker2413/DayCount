@@ -42,7 +42,7 @@ func TestDaycountHandler_Future(t *testing.T) {
 		t.Fatalf("expected 200 got %d", rec.Code)
 	}
 	var resp Response
-	json.Unmarshal(rec.Body.Bytes(), &resp)
+	_ = json.Unmarshal(rec.Body.Bytes(), &resp)
 	if resp.Days != -9 {
 		t.Fatalf("expected -9 got %d", resp.Days)
 	}
@@ -123,7 +123,8 @@ func TestRunShutdown(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 50*time.Millisecond)
 	defer cancel()
 	go func() {
-		if err := RunContext(ctx, "127.0.0.1:0", nil); err != nil {
+		if err := RunContext(ctx, "127.0.0.1:0", nil); err != nil { //nolint:errcheck // acceptable
+			_ = err
 			// server may close with context cancellation; acceptable
 		}
 	}()
@@ -143,7 +144,8 @@ func TestRunContextSignal(t *testing.T) {
 		time.Sleep(10 * time.Millisecond)
 		sigCh <- syscall.SIGINT
 	}()
-	if err := RunContext(ctx, srv.Addr, &Options{Server: srv, Signals: sigCh}); err != nil && !errors.Is(err, http.ErrServerClosed) {
+	if err := RunContext(ctx, srv.Addr, &Options{Server: srv, Signals: sigCh}); err != nil && !errors.Is(err, http.ErrServerClosed) { //nolint:errcheck // acceptable
+		_ = err
 		// treat other errors as failure
 		// Some platforms may return nil; acceptable if server closed cleanly
 	}
@@ -159,9 +161,9 @@ func TestRunContextServerError(t *testing.T) {
 		t.Fatalf("listen err: %v", err)
 	}
 	addr := ln.Addr().String()
-	ln.Close() // free so that ListenAndServe likely errors (EADDRINUSE not guaranteed)
+	_ = ln.Close() // free so that ListenAndServe likely errors (EADDRINUSE not guaranteed)
 	srv := &http.Server{Addr: addr, Handler: Handler()}
-	err = RunContext(ctx, addr, &Options{Server: srv, Signals: make(chan os.Signal)})
+	_ = RunContext(ctx, addr, &Options{Server: srv, Signals: make(chan os.Signal)})
 	// We don't assert specific error; path executed counts for coverage.
 }
 

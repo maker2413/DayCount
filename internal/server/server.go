@@ -28,7 +28,10 @@ type Response struct {
 func Handler() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/daycount", daycountHandler)
-	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK); w.Write([]byte("ok")) })
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("ok"))
+	})
 	return mux
 }
 
@@ -76,7 +79,7 @@ func daycountHandler(w http.ResponseWriter, r *http.Request) {
 	if q.Get("format") == "plain" {
 		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 		w.WriteHeader(http.StatusOK)
-		w.Write([]byte(formatPlain(days, phrase, dateStr)))
+		_, _ = w.Write([]byte(formatPlain(days, phrase, dateStr)))
 		return
 	}
 
@@ -87,7 +90,7 @@ func daycountHandler(w http.ResponseWriter, r *http.Request) {
 		Phrase:    formatPlain(days, phrase, dateStr),
 	}
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	json.NewEncoder(w).Encode(resp)
+	_ = json.NewEncoder(w).Encode(resp)
 }
 
 func formatPlain(days int, phrase, input string) string {

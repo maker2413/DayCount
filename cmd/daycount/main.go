@@ -25,8 +25,8 @@ func main() {
 	fs.BoolVar(&serve, "serve", false, "run HTTP server instead of CLI")
 
 	fs.Usage = func() {
-		fmt.Fprintf(fs.Output(), "Usage: daycount <date> [--reference YYYY-MM-DD] [--format]\n")
-		fmt.Fprintln(fs.Output(), "Supported input formats: 2006-01-02, 2006/01/02, 01/02/2006, RFC3339, and common datetime variants.")
+		_, _ = fmt.Fprintf(fs.Output(), "Usage: daycount <date> [--reference YYYY-MM-DD] [--format]\n")
+		_, _ = fmt.Fprintln(fs.Output(), "Supported input formats: 2006-01-02, 2006/01/02, 01/02/2006, RFC3339, and common datetime variants.")
 		fs.PrintDefaults()
 	}
 
