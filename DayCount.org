@@ -1,0 +1,14 @@
+#+TITLE: Day Count
+
+This is a simple go based application that when executed with a date will tell
+you how many days have elapsed since the provided date or how many days until
+the provided date. The application will start as a simple cli tool, but will
+someday be run as a web server with api routes to invoke the various features.
+
+* Code of conduct
+  I absolutely love unit tests and strive for my code base to always have a
+  minimum of 90% code coverage. While you work with me you maintain this amount
+  of code coverage at all times.
+
+  I will make commits. You should never make commits for me as I will decide
+  when we will commit our work and push it up. You will still write the code.

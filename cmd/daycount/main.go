@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
 	"os"
@@ -8,9 +9,11 @@ import (
 
 	"github.com/maker2413/daycount/internal/compute"
 	"github.com/maker2413/daycount/internal/parse"
+	"github.com/maker2413/daycount/internal/server"
 )
 
 func main() {
+	var serve bool
 	var reference string
 	var formatOutput bool
 
@@ -19,6 +22,7 @@ func main() {
 	fs.StringVar(&reference, "r", "", "shorthand for --reference")
 	fs.BoolVar(&formatOutput, "format", false, "print a friendly sentence instead of raw integer")
 	fs.BoolVar(&formatOutput, "f", false, "shorthand for --format")
+	fs.BoolVar(&serve, "serve", false, "run HTTP server instead of CLI")
 
 	fs.Usage = func() {
 		fmt.Fprintf(fs.Output(), "Usage: daycount <date> [--reference YYYY-MM-DD] [--format]\n")
@@ -28,6 +32,19 @@ func main() {
 
 	if err := fs.Parse(os.Args[1:]); err != nil {
 		os.Exit(2)
+	}
+
+	if serve {
+		// Run server mode and ignore positional args.
+		if len(fs.Args()) != 0 {
+			fs.Usage()
+			os.Exit(2)
+		}
+		if err := server.Run(context.Background(), ""); err != nil {
+			fmt.Fprintf(os.Stderr, "server error: %v\n", err)
+			os.Exit(1)
+		}
+		return
 	}
 
 	args := fs.Args()
